@@ -1,0 +1,23 @@
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.photo-card {
+  margin-right: 15px;
+}
+
+// .info {
+//   display: flex;
+//   flex-wrap: wrap;
+//   justify-content: center;
+// }
+
+// .info-item {
+//   display: block;
+// }
+
+.is-hidden {
+  display: none;
+}
