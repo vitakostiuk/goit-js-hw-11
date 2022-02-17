@@ -18,7 +18,9 @@ function makeImagesMarkup(images) {
         poster = webformatURL;
       }
       return `<div class="photo-card">
-      <img src="${poster}" alt="${tags}" loading="lazy" width="150" />
+        <a href="${largeImageURL}">
+          <img src="${poster}" alt="${tags}" loading="lazy" width="150" />
+        </a>
         <div class="info">
           <p class="info-item">
             <b>Likes ${likes}</b>
