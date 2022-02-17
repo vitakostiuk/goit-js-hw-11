@@ -13,10 +13,13 @@ const imageApiService = new ImageApiService();
 refs.form.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', onLoadMore);
 
+
 function onSearch (e) {
   e.preventDefault();
+  refs.loadMoreBtn.classList.add('is-hidden');
+  refs.loadMoreBtn.disabled = true;
 
-  imageApiService.query = e.currentTarget.elements.searchQuery.value;
+  imageApiService.query = e.currentTarget.elements.searchQuery.value.trim();
   
   imageApiService.resetPage();
   clearGallery();
@@ -24,15 +27,24 @@ function onSearch (e) {
   if (imageApiService.query === '') {
     return alert ('Пустая строка');
   }
+  getPromise();
+}
 
+function getPromise() {
   imageApiService.fetchImages()
-    .then(hits => {
-      if (hits.length === 0) {
-        return alert ('Неправильный запрос');
-      }
-        renderImages(hits);
-        refs.loadMoreBtn.classList.remove('is-hidden');
-      })
+    .then(data => {
+      if (imageApiService.page * imageApiService.perPage >= data.totalHits) {
+        refs.loadMoreBtn.classList.add('is-hidden');
+        return alert ('We are sorry, but you have reached the end of search results.');
+      } 
+    imageApiService.incrementPage();
+    if (data.hits.length === 0) {
+      return alert ('Неправильный запрос');
+    }
+    renderImages(data.hits);
+    refs.loadMoreBtn.classList.remove('is-hidden');
+    refs.loadMoreBtn.disabled = false;
+  })
     .catch(err => handleError(err));
 }
 
@@ -43,14 +55,14 @@ function renderImages (hits) {
 
 function handleError (err) {
   refs.gallery.innerHTML = '';
+  console.log(err.message);
+  refs.loadMoreBtn.classList.add('is-hidden');
+
 }
 
-function onLoadMore(e) {
-  imageApiService.fetchImages()
-    .then(hits => {
-      renderImages(hits);
-      refs.loadMoreBtn.classList.remove('is-hidden');
-    });
+function onLoadMore() {
+  refs.loadMoreBtn.disabled = true;
+  getPromise();
 }
 
 function clearGallery() {

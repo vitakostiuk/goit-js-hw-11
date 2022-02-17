@@ -13,7 +13,7 @@ function makeImagesMarkup(images) {
       comments,
       downloads
     }) => {
-      let poster = webformatURL;
+      let poster = emptyImg;
       if (webformatURL) {
         poster = webformatURL;
       }
