@@ -1,3 +1,5 @@
+const axios = require('axios').default;
+
 export default class ImageApiService {
   BASE_URL = 'https://pixabay.com/api/';
 
@@ -19,8 +21,11 @@ export default class ImageApiService {
       per_page: this.perPage,
     })
 
-    return fetch(`${this.BASE_URL}?${queryParams}`)
-      .then(response => response.json())
+  //   return fetch(`${this.BASE_URL}?${queryParams}`)
+  //     .then(response => response.json())
+  // }
+  return axios.get(`${this.BASE_URL}?${queryParams}`)
+    .then(response => response.data)
   }
 
   get query() {

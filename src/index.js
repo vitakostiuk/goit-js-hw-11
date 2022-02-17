@@ -1,3 +1,5 @@
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+
 import './sass/main.scss';
 import ImageApiService from './services/api-service';
 import makeImagesMarkup from './components/images-markup'
@@ -25,28 +27,48 @@ function onSearch (e) {
   clearGallery();
 
   if (imageApiService.query === '') {
-    return alert ('Пустая строка');
+    Notify.warning('Enter a request');
+    return;
   }
-  getPromise();
-}
 
-function getPromise() {
-  imageApiService.fetchImages()
+    imageApiService.fetchImages()
     .then(data => {
-      if (imageApiService.page * imageApiService.perPage >= data.totalHits) {
-        refs.loadMoreBtn.classList.add('is-hidden');
-        return alert ('We are sorry, but you have reached the end of search results.');
-      } 
-    imageApiService.incrementPage();
-    if (data.hits.length === 0) {
-      return alert ('Неправильный запрос');
-    }
-    renderImages(data.hits);
-    refs.loadMoreBtn.classList.remove('is-hidden');
-    refs.loadMoreBtn.disabled = false;
+      imageApiService.incrementPage();
+        if (data.hits.length === 0) {
+          Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+          return;
+        }
+
+      renderImages(data.hits);
+      
+      refs.loadMoreBtn.classList.remove('is-hidden');
+      refs.loadMoreBtn.disabled = false;
   })
     .catch(err => handleError(err));
 }
+
+// function getPromise() {
+//   imageApiService.fetchImages()
+//     .then(data => {
+//       console.log(data);
+//       console.log(data.totalHits);
+//     imageApiService.incrementPage();
+//       if (data.hits.length === 0) {
+//       Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+//       return;
+//       }
+
+//       renderImages(data.hits);
+
+//       if (imageApiService.page * imageApiService.perPage >= data.totalHits) {
+//         refs.loadMoreBtn.classList.add('is-hidden');
+//         Notify.warning('We are sorry, but you have reached the end of search results.');
+//       } 
+//     refs.loadMoreBtn.classList.remove('is-hidden');
+//     refs.loadMoreBtn.disabled = false;
+//   })
+//     .catch(err => handleError(err));
+// }
 
 function renderImages (hits) {
   const markup = makeImagesMarkup(hits);
@@ -62,7 +84,23 @@ function handleError (err) {
 
 function onLoadMore() {
   refs.loadMoreBtn.disabled = true;
-  getPromise();
+
+  imageApiService.fetchImages()
+    .then(data => {
+      imageApiService.incrementPage();
+
+      renderImages(data.hits);
+      
+      if (imageApiService.page * imageApiService.perPage >= data.totalHits) {
+        refs.loadMoreBtn.classList.add('is-hidden');
+        Notify.warning('We are sorry, but you have reached the end of search results.');
+        return;
+      } 
+      
+      refs.loadMoreBtn.classList.remove('is-hidden');
+      refs.loadMoreBtn.disabled = false;
+  })
+    .catch(err => handleError(err));
 }
 
 function clearGallery() {
