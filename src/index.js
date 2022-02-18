@@ -3,8 +3,8 @@ import SimpleLightbox from "simplelightbox";
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 import './sass/main.scss';
-import ImageApiService from './services/api-service';
-import makeImagesMarkup from './components/images-markup'
+import ImageApiService from './js/api';
+import makeImagesMarkup from './js/markup'
 
 const refs = {
   form: document.querySelector('#search-form'),
@@ -19,7 +19,7 @@ refs.form.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', onLoadMore);
 
 
-function onSearch (e) {
+async function onSearch (e) {
   e.preventDefault();
   refs.loadMoreBtn.classList.add('is-hidden');
   refs.loadMoreBtn.disabled = true;
@@ -34,23 +34,41 @@ function onSearch (e) {
     return;
   }
 
-    imageApiService.fetchImages()
-    .then(data => {
-      imageApiService.incrementPage();
-        if (data.hits.length === 0) {
-          Notify.failure('Sorry, there are no images matching your search query. Please try again.');
-          return;
-        }
-      
-      Notify.success(`Hooray! We found ${data.totalHits} images.`);
+  try {
+    const data = await imageApiService.fetchImages();
+    if (data.hits.length === 0) {
+      Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+      return;
+    }
+    Notify.success(`Hooray! We found ${data.totalHits} images.`);
 
-      renderImages(data.hits);
-      openLargeImage();
+    renderImages(data.hits);
+    openLargeImage();
+    
+    refs.loadMoreBtn.classList.remove('is-hidden');
+    refs.loadMoreBtn.disabled = false;
+  } catch (error) {
+    handleError(error);
+  }
+  
+  // --------- Ниже с промисами (выше async await)---------
+  //   imageApiService.fetchImages()
+  //   .then(data => {
+  //     imageApiService.incrementPage();
+  //       if (data.hits.length === 0) {
+  //         Notify.failure('Sorry, there are no images matching your search query. Please try again.');
+  //         return;
+  //       }
       
-      refs.loadMoreBtn.classList.remove('is-hidden');
-      refs.loadMoreBtn.disabled = false;
-  })
-    .catch(err => handleError(err));
+  //     Notify.success(`Hooray! We found ${data.totalHits} images.`);
+
+  //     renderImages(data.hits);
+  //     openLargeImage();
+      
+  //     refs.loadMoreBtn.classList.remove('is-hidden');
+  //     refs.loadMoreBtn.disabled = false;
+  // })
+  //   .catch(err => handleError(err));
 }
 
 function renderImages (hits) {
@@ -65,27 +83,28 @@ function handleError (err) {
 
 }
 
-function onLoadMore() {
+async function onLoadMore() {
   refs.loadMoreBtn.disabled = true;
 
-  imageApiService.fetchImages()
-    .then(data => {
-      imageApiService.incrementPage();
+  try {
+  const data = await imageApiService.fetchImages();
+  imageApiService.incrementPage();
 
-      renderImages(data.hits);
-      smoothScroll();
-      openLargeImage().refresh();
-      
-      if (imageApiService.page * imageApiService.perPage >= data.totalHits) {
-        refs.loadMoreBtn.classList.add('is-hidden');
-        Notify.warning('We are sorry, but you have reached the end of search results.');
-        return;
-      } 
+  renderImages(data.hits);
+  smoothScroll();
+  openLargeImage().refresh();
+  
+  if (imageApiService.page * imageApiService.perPage >= data.totalHits) {
+    refs.loadMoreBtn.classList.add('is-hidden');
+    Notify.warning('We are sorry, but you have reached the end of search results.');
+    return;
+  } 
 
-      refs.loadMoreBtn.classList.remove('is-hidden');
-      refs.loadMoreBtn.disabled = false;
-  })
-    .catch(err => handleError(err));
+  refs.loadMoreBtn.classList.remove('is-hidden');
+  refs.loadMoreBtn.disabled = false;
+  } catch (error) {
+    handleError(error);
+  }
 }
 
 function clearGallery() {

@@ -25,16 +25,20 @@ function makeImagesMarkup(images) {
         </div>
         <div class="info">
           <p class="info-item">
-            <b>Likes ${likes}</b>
+            <span>Likes</span>
+            <span>${likes}</span>
           </p>
           <p class="info-item">
-            <b>Views ${views}</b>
+            <span>Views</span>
+            <span>${views}</span>
           </p>
           <p class="info-item">
-            <b>Comments ${comments}</b>
+            <span>Comments</span>
+            <span>${comments}</span>
           </p>
           <p class="info-item">
-            <b>Downloads ${downloads}</b>
+            <span>Downloads</span>
+            <span>${downloads}</span>
           </p>
         </div>
     </div>`
