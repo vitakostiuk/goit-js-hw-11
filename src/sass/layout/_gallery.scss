@@ -57,11 +57,12 @@
   text-align: center;
 }
 
-button.load-more {
-  display: block;
-  margin: 0 auto;
+.load-more {
+  margin-left: 50%;
+  margin-right: 50%;
   margin-top: 15px;
   margin-bottom: 15px;
+  width: 80px;
   padding: 3px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-weight: 200;
