@@ -12,18 +12,23 @@
 
 <header class="page-header">
   <form class="search-form" id="search-form">
-    <input class="input" type="text" name="searchQuery" autocomplete="off" placeholder="Search images..." />
-    <button class="btn" type="submit">
-      <svg class="icon">
-        <use href="#icon-search"></use>
-      </svg>
-    </button>
+    <div class="wrap">
+      <input class="input" type="text" name="searchQuery" autocomplete="off" placeholder="Search images..." />
+      <button class="btn" type="submit">
+        <svg class="icon">
+          <use href="#icon-search"></use>
+        </svg>
+      </button>
+    </div>
   </form>
 </header>
 
-<div class="gallery">
-  <!-- Карточки изображений -->
+<div class="container">
+  <div class="gallery">
+    <!-- Карточки изображений -->
+  </div>
+  <button type="button" class="load-more is-hidden">Load more</button>
 </div>
 
-<button type="button" class="load-more is-hidden">Load more</button>
+<footer class="footer"></footer>
 

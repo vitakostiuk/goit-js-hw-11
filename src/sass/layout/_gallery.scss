@@ -1,3 +1,10 @@
+.container {
+  width: 100%;
+  padding-left: 25px;
+  padding-right: 25px;
+  margin: 0 auto;
+}
+
 .gallery {
   display: flex;
   flex-wrap: wrap;
@@ -5,19 +12,59 @@
 }
 
 .photo-card {
-  margin-right: 15px;
+  margin-top: 15px;
+  margin-left: 15px;
+  flex-basis: calc(100% / 7 - 15px);
+  height: 100%;
 }
-
-// .info {
-//   display: flex;
-//   flex-wrap: wrap;
-//   justify-content: center;
-// }
-
-// .info-item {
-//   display: block;
-// }
 
 .is-hidden {
   display: none;
+}
+
+.thumb {
+  margin: 0;
+  width: 100%;
+  height: 120px;
+}
+
+.image {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.info {
+  display: flex;
+}
+
+.info-item {
+  display: block;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: 300;
+  font-size: 7px;
+  margin: 0;
+  padding: 5px 0;
+  text-align: center;
+}
+
+button.load-more {
+  display: block;
+  margin: 0 auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding: 3px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: 200;
+  font-size: 12px;
+  cursor: pointer;
 }
